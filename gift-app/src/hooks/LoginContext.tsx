@@ -14,16 +14,26 @@ interface LoginProviderProps {
 }
 
 export const LoginProvider = ({ children }: LoginProviderProps) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const saved = sessionStorage.getItem('isLoggedIn');
+    return saved === 'true';
+  });
+  const [username, setUsername] = useState(() => {
+    return sessionStorage.getItem('username') || '';
+  });
 
   const login = (username: string) => {
     setIsLoggedIn(true);
     setUsername(username);
+    sessionStorage.setItem('isLoggedIn', 'true');
+    sessionStorage.setItem('username', username);
   };
+
   const logout = () => {
     setIsLoggedIn(false);
     setUsername('');
+    sessionStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('username');
   };
 
   const value = useMemo(

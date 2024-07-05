@@ -1,7 +1,7 @@
 import Input from '@components/Input/Input';
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLogin } from '../hooks/LoginContext';
 
 const LoginPage = () => {
@@ -9,12 +9,14 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const { login } = useLogin();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = (event: React.FormEvent) => {
     event.preventDefault();
     if (id && password) {
       login(id);
-      navigate('/');
+      const from = (location.state as { from?: string })?.from || '/';
+      navigate(from);
     }
   };
 
